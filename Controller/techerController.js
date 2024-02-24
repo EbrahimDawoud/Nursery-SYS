@@ -1,15 +1,34 @@
-// exports.getAllTeachers = (req, res) => {
+const bcrypt = require("bcryptjs");
+const Teacher = require("../Model/teacher");
+
+exports.register = async (req, res, next) => {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 12);
+    const teacher = await Teacher.create({
+      username: req.body.username,
+      password: hashedPassword, 
+      age: req.body.age,
+      image: req.body.image
+    });
     
-//     res.json({ data: "GET /teacher", message:"Take All Teachers" })
-// };
-// exports.createTeacher = (req, res) => {
-//     const data = req.body;
-//     res.json({ message: "Post /teacher", message:"Create Teacher", data  })
-// };
-// exports.updateTeacher = (req, res) => {
-//     const id = req.body.id;
-//     res.json({ data: "Put /teacher", message:`Update Teacher id: ${id}` })
-// };
-// exports.deleteTeacher = (req, res) => {
-//     res.json({ data: "Delete /teacher", message:"Delete Teacher" })
-// };
+
+    teacher.password = undefined;
+
+    res.status(201).json({ teacher });
+  } catch (err) {
+
+    res.status(500).json({ message: "There is an error", err:`${err.message}` });
+  }
+};
+
+exports.update = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+
+    const updatedTeacher = await Teacher.find;
+
+    res.status(201).json({ teacher });
+  } catch (err) {
+    res.status(500).json({ message: "There is an error" });
+  }
+};

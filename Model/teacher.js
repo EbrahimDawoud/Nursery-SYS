@@ -11,7 +11,12 @@ const teacherSchema = new mongoose.Schema({
     minlength: 8,
     select: false,
   },
+  image: {
+    type: String,
+    required: [true, "Please upload  your photo"],
+  }
 });
+
 
 const Teacher = mongoose.model("Teacher", teacherSchema);
 

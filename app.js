@@ -7,7 +7,9 @@ const dotenv = require("dotenv");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
-const xss = require("xss-clean");
+const swaggerUi = require('swagger-ui-express');
+const path = require('path');
+
 const cors = require("cors");
 dotenv.config();
 const limiter = rateLimit({
@@ -15,17 +17,14 @@ const limiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   message: "Too many requests from this IP, please try again in an hour!",
 });
-
+/*------------------------ Packages To Servers--------------- */
 server.options("*", cors());
 server.use(cors());
 server.use(helmet());
 server.use("/api", limiter);
 server.use(express.json({ limit: "10kb" }));
 server.use(mongoSanitize());
-
-
 server.use(express.json()); // data that comes from the body of the request need package body-parser 
-
 server.use(morgan('dev'));
 
 /*------------------------ Routers--------------- */
@@ -37,6 +36,9 @@ const childrenRouter = require("./Routes/childRouter");
 const classRouter = require("./Routes/classRouter");
 const passwordRouter = require("./Routes/changePasswordRouter");
 
+/*------------------------ Middlewares--------------- */
+server.use("/public", express.static(path.join(__dirname, "public")));
+server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(require('./swagger-output.json')));
 server.use( registerRouter)
 server.use( loginRouter)
 server.use(autMw)
@@ -54,12 +56,11 @@ mongoose
     console.log("DB connection successful!")
     server.listen(process.env.PORT, () => console.log(`Server is  Listening at http://localhost:${process.env.PORT}`));
   })
-
   .catch(() => { console.log("Could not connect to DB!") })
 
 
 server.use((request, response, next) => {
-  response.status(404).json({ message: "Not found" });
+  response.status(404).json({ message: "Error 404 NotFound" });
 });
 // MW Error handler Callback(4 arguments) , function.length
 server.use((error, request, response, next) => {

@@ -5,6 +5,7 @@ exports.addChild = async (req, res) => {
     const children = await Children.create({
       username: req.body.username,
       password: hashedPassword,
+      
     });
 
     children.password = undefined;

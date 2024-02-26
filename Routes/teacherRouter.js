@@ -1,21 +1,32 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const teachersControllers = require("../Controller/techerController");
-const upload = require("../middlewares/multer");
 
-router.get(
-    "/",
-    (req, res) => {
-        res.json({ message: "Welcome to the teacher page" });
-    })
+const { createTeacher, getAllTeachers, updateTeacher,getTeacherById, deleteTeacher } = require("../Controller/techerController");
+const { teacherInsertArray } = require("../middlewares/Validator/teacherValidator");
+const { validatorAcitvator } = require("../middlewares/Validator/validator");
+const checkFileUpload = require('../middlewares/Validator/imageValidation');
+const upload = require("../middlewares/multer");
+const { isAdmin, isTeacher } = require("../middlewares/authMiddlewar");
+
+
+router.route('/teachers')
+    .get(isAdmin,getAllTeachers)
+    .put(updateTeacher)
+    .delete(isAdmin,deleteTeacher)
     .post(
-        "/login",
-        upload.single("photo"),
-        teachersControllers.register
+        upload.single("profileImage"),
+        checkFileUpload,
+        teacherInsertArray,
+        validatorAcitvator,
+        createTeacher
     )
-    .post(
-        "/update/:userId",
-        upload.single("photo"),
-        teachersControllers.update
-    );  
+
+router.route("/teachers/:id")
+    .get(isTeacher, getTeacherById)
+    
+
 module.exports = router;
+
+
+
+    

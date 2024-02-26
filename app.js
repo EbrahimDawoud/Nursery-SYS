@@ -9,7 +9,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const swaggerUi = require('swagger-ui-express');
 const path = require('path');
-
+const bodyParser = require('body-parser');
 const cors = require("cors");
 dotenv.config();
 const limiter = rateLimit({
@@ -24,13 +24,12 @@ server.use(helmet());
 server.use("/api", limiter);
 server.use(express.json({ limit: "10kb" }));
 server.use(mongoSanitize());
-server.use(express.json()); // data that comes from the body of the request need package body-parser 
+server.use(express.json()); 
 server.use(morgan('dev'));
 
 /*------------------------ Routers--------------- */
 const teacherRouter = require("./Routes/teacherRouter");
 const loginRouter = require('./Routes/loginRouter');
-const autMw = require("./middlewares/authMiddlewar");
 const registerRouter = require('./Routes/teacherRegister');
 const childrenRouter = require("./Routes/childRouter");
 const classRouter = require("./Routes/classRouter");
@@ -41,7 +40,6 @@ server.use("/public", express.static(path.join(__dirname, "public")));
 server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(require('./swagger-output.json')));
 server.use( registerRouter)
 server.use( loginRouter)
-server.use(autMw)
 server.use( passwordRouter);
 server.use( teacherRouter);
 server.use( childrenRouter);

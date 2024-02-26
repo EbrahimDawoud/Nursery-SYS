@@ -1,46 +1,52 @@
-
+/*------------------------ Core Packages--------------- */
 const express = require('express');
 const server = express();
 const morgan = require('morgan');
-const port = process.env.port || 3000;
-// for environment variables
-const dotenv = require("dotenv");
-dotenv.config();
-
 const mongoose = require('mongoose');
-const swaggerUi = require('swagger-ui-express');
+const dotenv = require("dotenv");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
+const cors = require("cors");
+dotenv.config();
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: "Too many requests from this IP, please try again in an hour!",
+});
 
-// MW for data formating 
+server.options("*", cors());
+server.use(cors());
+server.use(helmet());
+server.use("/api", limiter);
+server.use(express.json({ limit: "10kb" }));
+server.use(mongoSanitize());
+
+
 server.use(express.json()); // data that comes from the body of the request need package body-parser 
 
 server.use(morgan('dev'));
 
-//router teacher and child
+/*------------------------ Routers--------------- */
 const teacherRouter = require("./Routes/teacherRouter");
 const loginRouter = require('./Routes/loginRouter');
 const autMw = require("./middlewares/authMiddlewar");
 const registerRouter = require('./Routes/teacherRegister');
 const childrenRouter = require("./Routes/childRouter");
 const classRouter = require("./Routes/classRouter");
-server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(require('./swagger-output.json')));
+const passwordRouter = require("./Routes/changePasswordRouter");
+
 server.use( registerRouter)
 server.use( loginRouter)
 server.use(autMw)
+server.use( passwordRouter);
 server.use( teacherRouter);
 server.use( childrenRouter);
 server.use( classRouter);
 
-// MW for every request not found
-server.use((request, response, next) => {
-  response.status(404).json({ message: "Not found" });
-});
-// MW Error handler Callback(4 arguments) , function.length
-server.use((error, request, response, next) => {
-  response.status(500).send(error.message);
-});
-// mongoose.connect("mongodb://localhost:27017/PD")
-//make the two severs connected in relation
 
+/*------------------------ Servers--------------- */
 
 mongoose
   .connect(process.env.DB)
@@ -52,11 +58,12 @@ mongoose
   .catch(() => { console.log("Could not connect to DB!") })
 
 
+server.use((request, response, next) => {
+  response.status(404).json({ message: "Not found" });
+});
+// MW Error handler Callback(4 arguments) , function.length
+server.use((error, request, response, next) => {
+  response.status(500).send(error.message);
+});
 
 
-
-
-
-
-
-//

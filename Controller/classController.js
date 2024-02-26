@@ -4,8 +4,8 @@ exports.getClasses = (req, res, next) => {
     Class.find()
         .populate("supervisor")
         .populate("children")
-        .then((c) => {
-            res.status(200).json(c);
+        .then((data) => {
+            res.status(200).json({message: "Classes fetched successfully", data});
         })
         .catch((error) => {
             next(error);

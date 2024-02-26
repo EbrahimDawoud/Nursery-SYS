@@ -4,6 +4,6 @@ const router = express.Router();
 const { login } = require('../Controller/authController');
 
 router.route("/login")
-      .get(login)
+      .post(login)
 
 module.exports = router;

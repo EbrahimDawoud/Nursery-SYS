@@ -1,4 +1,4 @@
-Nursery System API # Nursery System API
+# Nursery System API
 
 The Nursery System API is designed to facilitate the management and operation of nursery schools, allowing for efficient handling of teacher, class, and children data. This document outlines how to get started, use the API, and where to find support.
 

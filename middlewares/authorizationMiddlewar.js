@@ -3,10 +3,7 @@ const jwt = require("jsonwebtoken");
 module.exports.isAdmin = (req, res, next) => {
 
     try {
-        let token = req.get("authorization").split(" ")[1];
-        let decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        req.token = decodedToken;
-        if (req.token.role === "admin") {
+        if (req.loggedInUser.role === "admin") {
             next();
         }
     }
@@ -21,10 +18,7 @@ module.exports.isAdmin = (req, res, next) => {
 
 module.exports.isTeacher = (req, res, next) => {
     try {
-        let token = req.get("authorization").split(" ")[1];
-        let decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        req.token = decodedToken;
-        if (req.token.role === "teacher" || req.token.role === "admin") {
+        if (req.loggedInUser.role === "teacher") {
             next();
         }
     }
@@ -39,7 +33,7 @@ module.exports.isTeacher = (req, res, next) => {
 }
 
 module.exports.isChild = (req, res, next) => {
-    if (req.token.role === "child") {
+    if (req.loggedInUser.role === "child") {
         next();
     }
     else {

@@ -10,6 +10,7 @@ exports.login = async (req, res) => {
     const adminUser = await Admin.findOne({ email: req.body.email }).select("+password");
     const childUser = await Children.findOne({ fullName: req.body.fullName }).select("+password");
     const teacherUser = await Teacher.findOne({ email: req.body.email }).select("+password");
+
     if (adminUser) {
       loggedInUser = adminUser;
       loggedInUser.role = "admin";
@@ -33,13 +34,14 @@ exports.login = async (req, res) => {
     loggedInUser.password = undefined;
 
     const token = jwt.sign(
-      { userId: loggedInUser._id, role: loggedInUser.role },
+      { userId: loggedInUser._id,userName:loggedInUser.username, role: loggedInUser.role },
       process.env.JWT_SECRET,
       {
         expiresIn: "4d",
       }
     );
     res.status(201).json({ loggedInUser, token });
+
   } catch (err) {
     res.status(500).json({ message: "filed to Login" });
   }

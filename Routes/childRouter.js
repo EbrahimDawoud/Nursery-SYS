@@ -1,7 +1,7 @@
 const express = require('express');
 const { getAllChildren, addChild, getChildById, updateChild, deleteChild } = require('../Controller/childController');
 const router = express.Router();
-const { isAdmin } = require("../middlewares/authMiddlewar");
+const { isAdmin } = require("../middlewares/authorizationMiddlewar");
 const { childInsertArray } = require('../middlewares/Validator/chlidValidation');
 const { updateChildArray } = require('../middlewares/Validator/updateChildValidator');
 const { validatorAcitvator } = require('../middlewares/Validator/validator');

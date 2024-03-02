@@ -34,11 +34,13 @@ const authRouter = require('./Routes/authenticationRouter');
 const childrenRouter = require("./Routes/childRouter");
 const classRouter = require("./Routes/classRouter");
 const changePassRouter = require("./Routes/changePasswordRouter");
+const authMW = require("./middlewares/authMW");
 
 /*------------------------ Middlewares--------------- */
 server.use("/public", express.static(path.join(__dirname, "public")));
 server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(require('./swagger-output.json')));
 server.use( authRouter);
+server.use( authMW);
 server.use( teacherRouter);
 server.use( childrenRouter);
 server.use( classRouter);

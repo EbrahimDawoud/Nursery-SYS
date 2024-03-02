@@ -6,7 +6,7 @@ const { teacherInsertArray } = require("../middlewares/Validator/teacherValidato
 const { validatorAcitvator } = require("../middlewares/Validator/validator");
 const checkFileUpload = require('../middlewares/Validator/imageValidation');
 const upload = require("../middlewares/multer");
-const { isAdmin, isTeacher } = require("../middlewares/authMiddlewar");
+const { isAdmin, isTeacher } = require("../middlewares/authorizationMiddlewar");
 
 
 router.route('/teachers')

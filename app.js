@@ -28,23 +28,21 @@ server.use(express.json());
 server.use(morgan('dev'));
 
 /*------------------------ Routers--------------- */
+
 const teacherRouter = require("./Routes/teacherRouter");
-const loginRouter = require('./Routes/loginRouter');
-const registerRouter = require('./Routes/teacherRegister');
+const authRouter = require('./Routes/authenticationRouter');
 const childrenRouter = require("./Routes/childRouter");
 const classRouter = require("./Routes/classRouter");
-const passwordRouter = require("./Routes/changePasswordRouter");
+const changePassRouter = require("./Routes/changePasswordRouter");
 
 /*------------------------ Middlewares--------------- */
 server.use("/public", express.static(path.join(__dirname, "public")));
 server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(require('./swagger-output.json')));
-server.use( registerRouter)
-server.use( loginRouter)
-server.use( passwordRouter);
+server.use( authRouter);
 server.use( teacherRouter);
 server.use( childrenRouter);
 server.use( classRouter);
-
+server.use( changePassRouter);
 
 /*------------------------ Servers--------------- */
 

@@ -11,7 +11,7 @@ module.exports.isAdmin = (req, res, next) => {
         }
     }
     catch (error) {
-        error.message = "Not authenticated";
+        error.message = "Not authorized";
         error.statusCode = 401;
         next(error);
     }
@@ -29,7 +29,7 @@ module.exports.isTeacher = (req, res, next) => {
         }
     }
     catch (error) {
-        error.message = "Not authenticated";
+        error.message = "Not authorized";
         error.statusCode = 401;
         next(error);
     }

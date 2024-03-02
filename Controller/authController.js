@@ -5,6 +5,7 @@ const Children = require("../Model/children");
 const Admin = require('../Model/admin');
 const jwt = require("jsonwebtoken");
 exports.login = async (req, res) => {
+
   try {
     const adminUser = await Admin.findOne({ email: req.body.email }).select("+password");
     const childUser = await Children.findOne({ fullName: req.body.fullName }).select("+password");
@@ -40,9 +41,10 @@ exports.login = async (req, res) => {
     );
     res.status(201).json({ loggedInUser, token });
   } catch (err) {
-    res.status(500).json({ message: "filed to Login", err });
+    res.status(500).json({ message: "filed to Login" });
   }
 };
+
 module.exports.changePassword = async (req, res) => {
   try {
     const user = await Teacher.findById(req.user.userId).select("+password");
